@@ -18,7 +18,7 @@ export default function About() {
 
   const downloadResume = () => {
     const link = document.createElement("a")
-    link.href = "/resume/Aaqil_Khan_Resume.pdf"
+    link.href = "./resume/Aaqil-khan-Resume.pdf"
     link.download = "Aaqil_Khan_Resume.pdf"
     document.body.appendChild(link)
     link.click()
@@ -27,7 +27,7 @@ export default function About() {
 
   const stats = [
     { icon: Code, label: "Projects Delivered", value: "6+" },
-    { icon: Award, label: "Years Experience", value: "2+" },
+    { icon: Award, label: "Years Experience", value: "3+" },
     { icon: User, label: "Happy Clients", value: "15+" },
   ]
 

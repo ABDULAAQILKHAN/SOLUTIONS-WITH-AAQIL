@@ -9,57 +9,33 @@ import type { Project } from "../types"
 const projects: Project[] = [
   {
     id: "1",
-    name: "Masterly Learning Platform",
+    name: "Stepper.ai",
     description:
-      "Comprehensive e-learning environment with dynamic resume generation, quiz creation, and peer-to-peer connectivity. Built with React, Tailwind CSS, and FastAPI for real-time analytics and performance tracking.",
-    technologies: ["React", "FastAPI", "Tailwind CSS", "PostgreSQL", "WebSocket", "Docker"],
-    githubUrl: "https://github.com",
-    liveUrl: "https://masterly.com",
+      "AI chatbot to debug code step by step. Built a full-stack AI-powered tutorial generator, transforming single user prompts into interactive, step-by-step guides. Developed a responsive frontend with Next.js and Tailwind CSS, and a robust FastAPI backend to manage AI processing and data flow. Integrated Supabase for authentication and utilized Neon DB PostgreSQL for efficient storage and retrieval of tutorial content, ensuring seamless user experience and scalable data management.",
+    technologies: ["Next.js", "Tailwind CSS", "FastAPI", "Supabase", "Neon DB (PostgreSQL)"],
+    //githubUrl: "https://github.com/aaqilkhan/stepper-ai",
+    liveUrl: "https://stepperai.vercel.app/",
     featured: true,
   },
   {
     id: "2",
-    name: "Enterprise Microservices Architecture",
+    name: "MyCerts",
     description:
-      "Scalable microservices system serving 10,000+ users with Docker containerization, CI/CD pipelines, and 40% reduction in system downtime. Implemented robust SSL/TLS certificate management.",
-    technologies: ["Docker", "Kubernetes", "FastAPI", "PostgreSQL", "Redis", "AWS"],
-    githubUrl: "https://github.com",
-    featured: true,
+      "Secure Digital Certificate & Credential Hub. Developed a full-stack certificate management portal enabling professionals to securely share and verify credentials with recruiters. Implemented a login-based system for uploading, managing, and generating unique shareable links for certifications. Built a responsive React frontend for seamless user experience and a robust backend API using Node.js and FastAPI to handle all CRUD operations and secure link generation. Planning migration to a Blockchain backend for enhanced verification.",
+    technologies: ["Next.js", "FastAPI", "PostgreSQL", "Blockchain (planned)"],
+    //githubUrl: "https://github.com/aaqilkhan/mycerts",
+    liveUrl: "https://mycerts99.vercel.app/",
+    featured: false,
   },
   {
     id: "3",
-    name: "AI-Powered Analytics Dashboard",
+    name: "MyResumeAI",
     description:
-      "Real-time analytics platform with machine learning insights, automated reporting, and interactive data visualization. Integrated with multiple data sources and APIs.",
-    technologies: ["React", "Python", "TensorFlow", "D3.js", "MongoDB", "WebSocket"],
-    githubUrl: "https://github.com",
-    liveUrl: "https://analytics.com",
-  },
-  {
-    id: "4",
-    name: "Web3 DeFi Trading Platform",
-    description:
-      "Decentralized finance platform with smart contract integration, real-time trading, and portfolio management. Built with modern Web3 technologies and secure blockchain interactions.",
-    technologies: ["React", "Solidity", "Web3.js", "Ethereum", "MetaMask", "Node.js"],
-    githubUrl: "https://github.com",
-    liveUrl: "https://defi-platform.com",
-  },
-  {
-    id: "5",
-    name: "Mobile E-Commerce Solution",
-    description:
-      "Cross-platform mobile application with 50% improvement in UX efficiency, payment gateway integration, real-time notifications, and advanced product catalog management.",
-    technologies: ["React Native", "Node.js", "Express", "MongoDB", "Stripe", "Firebase"],
-    githubUrl: "https://github.com",
-  },
-  {
-    id: "6",
-    name: "Automation Workflow Engine",
-    description:
-      "Enterprise automation platform using n8n and custom workflows, reducing manual processes by 70%. Integrated with multiple third-party services and APIs.",
-    technologies: ["n8n", "Node.js", "PostgreSQL", "Docker", "REST APIs", "Webhooks"],
-    githubUrl: "https://github.com",
-    liveUrl: "https://automation.com",
+      "Intelligent Resume Builder. Developed a client-side resume builder powered by Gemini AI, enabling automatic parsing of user data to auto-fill resume fields—reducing manual entry time by over 90%. Users can generate polished, downloadable PDF resumes directly in the browser without any backend dependency. Implemented a modern, responsive UI using React and Tailwind CSS.",
+    technologies: ["React", "Gemini AI API", "Tailwind CSS", "PDF Generation Libraries"],
+    //githubUrl: "https://github.com/aaqilkhan/myresumeai",
+    liveUrl: "https://myresumeai.vercel.app/",
+    featured: false,
   },
 ]
 

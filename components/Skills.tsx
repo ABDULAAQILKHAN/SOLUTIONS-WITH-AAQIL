@@ -23,10 +23,18 @@ const skills: Skill[] = [
   { name: "Node.js", category: "Backend" },
   { name: "PostgreSQL", category: "Backend" },
   { name: "MongoDB", category: "Backend" },
+  { name: "Springboot", category: "Backend" },
+
+  // Database
+  { name: "MongoDB", category: "Database" },
+  { name: "MySQL", category: "Database" },
+  { name: "Postgres", category: "Database" },
+  { name: "Firebase", category: "Database" },
+  { name: "Supabase", category: "Database" },
 
   // Mobile
-  { name: "React Native", category: "Mobile" },
-  { name: "Flutter", category: "Mobile" },
+  { name: "React Native", category: "Frontend" },
+  { name: "Flutter", category: "Frontend" },
 
   // DevOps
   { name: "Docker", category: "DevOps" },
@@ -65,6 +73,7 @@ const skills: Skill[] = [
 const categoryIcons = {
   Frontend: Code,
   Backend: Database,
+  Database: Database,
   Mobile: Smartphone,
   DevOps: Settings,
   "AI & ML": Brain,
@@ -76,6 +85,7 @@ const categoryIcons = {
 const categoryColors = {
   Frontend: "from-blue-400 to-blue-600",
   Backend: "from-green-400 to-green-600",
+  Database: "from-teal-400 to-teal-600",
   Mobile: "from-purple-400 to-purple-600",
   DevOps: "from-orange-400 to-orange-600",
   "AI & ML": "from-pink-400 to-pink-600",

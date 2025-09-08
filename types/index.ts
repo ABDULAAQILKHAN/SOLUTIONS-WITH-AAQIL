@@ -21,6 +21,6 @@ export interface ExperienceType {
 
 export interface Skill {
   name: string
-  category: "Frontend" | "Backend" | "Mobile" | "DevOps" | "AI & ML" | "Web3" | "Automation" | "Cloud"
+  category: "Frontend" | "Backend" | "Mobile" | "DevOps" | "AI & ML" | "Web3" | "Automation" | "Cloud" | "Database"
   icon?: string
 }
