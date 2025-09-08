@@ -100,7 +100,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <p className="font-semibold text-white">Email</p>
-                    <p className="text-gray-300">aaqilpro99@gmail.com</p>
+                    <p className="text-gray-300">aaqilkhan.work@gmail.com</p>
                   </div>
                 </motion.a>
 
@@ -133,7 +133,7 @@ export default function Contact() {
 
                 <div className="flex space-x-4 pt-4">
                   <motion.a
-                    href="https://linkedin.com/in/aaqil"
+                    href="https://www.linkedin.com/in/aaqil-khan-b45135170"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
@@ -143,7 +143,7 @@ export default function Contact() {
                     <Linkedin className="w-6 h-6 text-white" />
                   </motion.a>
                   <motion.a
-                    href="https://github.com/aaqil"
+                    href="https://github.com/ABDULAAQILKHAN"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-gradient-to-r from-gray-700 to-gray-800 rounded-xl hover:from-gray-800 hover:to-gray-900 transition-all duration-300"
