@@ -5,9 +5,9 @@ import { Github, Linkedin, Mail, Heart, ArrowUp } from "lucide-react"
 
 export default function Footer() {
   const socialLinks = [
-    { icon: Github, href: "https://github.com/aaqil", label: "GitHub" },
-    { icon: Linkedin, href: "https://linkedin.com/in/aaqil", label: "LinkedIn" },
-    { icon: Mail, href: "mailto:aaqilpro99@gmail.com", label: "Email" },
+    { icon: Github, href: "https://github.com/ABDULAAQILKHAN", label: "GitHub" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/aaqil-khan-b45135170", label: "LinkedIn" },
+    { icon: Mail, href: "mailto:aaqilkhan.work@gmail.com", label: "Email" },
   ]
 
   const scrollToTop = () => {
