@@ -5,14 +5,20 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef, useState } from "react"
 import { Mail, Phone, Linkedin, Github, Send, CheckCircle, MapPin } from "lucide-react"
+import emailjs from '@emailjs/browser';
+
+const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
+const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
+const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
+const WELCOME_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_WELCOME_TEMPLATE_ID || "";
 
 export default function Contact() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [formData, setFormData] = useState({ name: "", email: "", message: "" })
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-
+  const [isSending, setIsSending] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -31,16 +37,46 @@ export default function Contact() {
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(false); // Reset submission status on a new attempt
+    if (!validateForm()) return;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (validateForm()) {
-      setTimeout(() => {
-        setIsSubmitted(true)
-        setFormData({ name: "", email: "", message: "" })
-      }, 1000)
+    setIsSending(true);
+    setErrors({}); // Clear previous submission errors
+
+    // 1. Parameters for the notification email (to you)
+    const notificationParams = {
+      from_name: formData.name,
+      from_email: formData.email,
+      to_email: "aaqilpro99@gmail.com", // Your recipient email
+      message: formData.message,
+    };
+
+    // 2. Parameters for the welcome email (to the user)
+    const welcomeParams = {
+      from_name: formData.name,   // Used for the greeting, e.g., "Hi {{from_name}}"
+      to_email: formData.email, // This sends the email to the person who filled out the form
+    };
+
+    try {
+      // Send the first email (notification to you)
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, notificationParams, PUBLIC_KEY);
+
+      // If the first email succeeds, send the second email (welcome message to user)
+      await emailjs.send(SERVICE_ID, WELCOME_TEMPLATE_ID, welcomeParams, PUBLIC_KEY);
+      
+      // If both emails are sent successfully
+      setIsSubmitted(true);
+      setFormData({ name: "", email: "", message: "" }); // Clear form on success
+
+    } catch (error) {
+      console.error("EmailJS send error:", error);
+      setErrors({ submit: "Failed to send message. Please try again." });
+    } finally {
+      setIsSending(false);
     }
-  }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
