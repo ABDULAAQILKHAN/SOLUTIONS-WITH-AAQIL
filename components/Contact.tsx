@@ -284,6 +284,7 @@ export default function Contact() {
                 >
                   <Send className="w-5 h-5 mr-2" />
                   Send Message
+                  {isSending ? "..." : ""}
                 </motion.button>
               </form>
             )}
