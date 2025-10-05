@@ -8,7 +8,7 @@ import { Mail, Phone, Linkedin, Github, Send, CheckCircle, MapPin } from "lucide
 import emailjs from '@emailjs/browser';
 
 const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
-const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
+// const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
 const WELCOME_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_WELCOME_TEMPLATE_ID || "";
 
@@ -46,22 +46,24 @@ export default function Contact() {
     setErrors({}); // Clear previous submission errors
 
     // 1. Parameters for the notification email (to you)
-    const notificationParams = {
-      from_name: formData.name,
-      from_email: formData.email,
-      to_email: "aaqilpro99@gmail.com", // Your recipient email
-      message: formData.message,
-    };
+    // const notificationParams = {
+    //   from_name: formData.name,
+    //   from_email: formData.email,
+    //   to_email: "aaqilpro99@gmail.com", // Your recipient email
+    //   message: formData.message,
+    // };
 
     // 2. Parameters for the welcome email (to the user)
     const welcomeParams = {
       from_name: formData.name,   // Used for the greeting, e.g., "Hi {{from_name}}"
-      to_email: formData.email, // This sends the email to the person who filled out the form
+      to_email: formData.email,
+      message: formData.message,
+      // This sends the email to the person who filled out the form
     };
 
     try {
       // Send the first email (notification to you)
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, notificationParams, PUBLIC_KEY);
+      //await emailjs.send(SERVICE_ID, TEMPLATE_ID, notificationParams, PUBLIC_KEY);
 
       // If the first email succeeds, send the second email (welcome message to user)
       await emailjs.send(SERVICE_ID, WELCOME_TEMPLATE_ID, welcomeParams, PUBLIC_KEY);

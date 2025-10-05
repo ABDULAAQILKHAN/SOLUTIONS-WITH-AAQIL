@@ -26,9 +26,9 @@ export default function About() {
   }
 
   const stats = [
-    { icon: Code, label: "Projects Delivered", value: "6+" },
+    { icon: Code, label: "Projects Delivered", value: "9+" },
     { icon: Award, label: "Years Experience", value: "3+" },
-    { icon: User, label: "Happy Clients", value: "15+" },
+    { icon: User, label: "Happy Clients", value: "10+" },
   ]
 
   return (
