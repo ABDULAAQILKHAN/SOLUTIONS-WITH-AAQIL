@@ -10,7 +10,7 @@ export default function ThemeToggle() {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="fixed top-6 right-6 z-50 p-3 bg-white/5 dark:bg-black/30 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+      className="fixed cursor-pointer top-6 right-6 z-50 p-3 bg-white/5 dark:bg-black/30 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       aria-label="Toggle theme"

@@ -32,7 +32,7 @@ export default function SpaceBackground() {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
       {/* Beautiful purple space gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 dark:from-black dark:via-purple-950 dark:to-slate-950" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-red-950 to-slate-900 dark:from-black dark:via-purple-950 dark:to-slate-950" />
 
       {/* Optimized stars with will-change */}
       {stars.map((star) => (
