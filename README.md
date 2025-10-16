@@ -1,5 +1,8 @@
-# Personal Portfolio
+# Solutions with Aaqil
 
-This is the source code for my personal portfolio website, built with Next.js. It showcases my skills, projects, and experience as a software engineer.
+![Portfolio Preview](image.png)
 
-Feel free to explore the code and reach out if you have any questions!
+A personal portfolio showcasing my work as a Full-Stack Developer and AI enthusiast. It highlights featured projects (Stepper.ai, MyCerts, MyResumeAI), professional focus areas, and a streamlined contact experience.
+
+## Tech Stack
+Next.js · React · TypeScript · Tailwind CSS · Framer Motion · FastAPI (backend integrations) · Supabase · Neon PostgreSQL · EmailJS · Gemini AI API · Docker (architecture) · n8n (automation)
