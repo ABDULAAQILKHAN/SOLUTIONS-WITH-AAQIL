@@ -11,7 +11,7 @@ const projects: Project[] = [
     id: "1",
     name: "Stepper.ai",
     description:
-      "AI chatbot to debug code step by step. Built a full-stack AI-powered tutorial generator, transforming single user prompts into interactive, step-by-step guides. Developed a responsive frontend with Next.js and Tailwind CSS, and a robust FastAPI backend to manage AI processing and data flow. Integrated Supabase for authentication and utilized Neon DB PostgreSQL for efficient storage and retrieval of tutorial content, ensuring seamless user experience and scalable data management.",
+      "AI chatbot to debug code step by step, transforming single user prompts into interactive, step-by-step guides. Developed a responsive frontend with Next.js and Tailwind CSS, and a robust FastAPI backend to manage AI processing and data flow. Integrated Supabase for authentication and utilized Neon DB PostgreSQL for efficient storage and retrieval of content, ensuring seamless user experience and scalable data management.",
     technologies: ["Next.js", "Tailwind CSS", "FastAPI", "Supabase", "Neon DB (PostgreSQL)"],
     //githubUrl: "https://github.com/aaqilkhan/stepper-ai",
     liveUrl: "https://stepperai.vercel.app/",
