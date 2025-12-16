@@ -45,7 +45,7 @@ const projects: Project[] = [
     technologies: ["Next.js", "Tailwind CSS", "FastAPI", "Supabase", "Neon DB (PostgreSQL)"],
     githubUrl: "https://github.com/aaqilkhan/stepper-ai",
     liveUrl: "https://stepperai.vercel.app/",
-    featured: false,
+    featured: true,
   },
 ]
 
@@ -106,9 +106,24 @@ export default function Projects() {
                 </motion.div>
               )}
 
-              <div className="h-48 bg-gradient-to-br from-orange-500/20 to-purple-600/20 rounded-xl mb-6 flex items-center justify-center relative overflow-hidden group-hover:from-orange-500/30 group-hover:to-purple-600/30 transition-all duration-300">
-                <Code className="w-16 h-16 text-orange-400 opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-              </div>
+              {project.liveUrl ? (
+                <div className="rounded-xl mb-6 overflow-hidden border border-white/10">
+                  <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+                    <iframe
+                      src={project.liveUrl}
+                      title={`${project.name} live preview`}
+                      className="absolute top-0 left-0 w-full h-full bg-black/20"
+                      loading="lazy"
+                      sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-popups"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="h-48 bg-gradient-to-br from-orange-500/20 to-purple-600/20 rounded-xl mb-6 flex items-center justify-center relative overflow-hidden group-hover:from-orange-500/30 group-hover:to-purple-600/30 transition-all duration-300">
+                  <Code className="w-16 h-16 text-orange-400 opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                </div>
+              )}
 
               <h3
                 className="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300"
