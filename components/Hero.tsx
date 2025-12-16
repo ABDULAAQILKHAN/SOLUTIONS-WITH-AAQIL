@@ -38,7 +38,7 @@ export default function Hero() {
             className="flex items-center justify-center mb-6"
           >
             <Sparkles className="w-8 h-8 text-orange-400 mr-3" />
-            <span className="text-orange-400 font-semibold text-lg tracking-wide">WELCOME TO THE FUTURE</span>
+            <span className="text-orange-400 font-semibold text-lg tracking-wide">Building the Next Generation of Secure, Intelligent Apps</span>
           </motion.div>
 
           <motion.h1

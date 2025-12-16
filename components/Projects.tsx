@@ -7,23 +7,23 @@ import { ExternalLink, Github, FolderOpen, Star, Code } from "lucide-react"
 import type { Project } from "../types"
 
 const projects: Project[] = [
-  {
+    {
     id: "1",
-    name: "Stepper.ai",
+    name: "Zayka Darbar",
     description:
-      "AI chatbot to debug code step by step, transforming single user prompts into interactive, step-by-step guides. Developed a responsive frontend with Next.js and Tailwind CSS, and a robust FastAPI backend to manage AI processing and data flow. Integrated Supabase for authentication and utilized Neon DB PostgreSQL for efficient storage and retrieval of content, ensuring seamless user experience and scalable data management.",
-    technologies: ["Next.js", "Tailwind CSS", "FastAPI", "Supabase", "Neon DB (PostgreSQL)"],
-    //githubUrl: "https://github.com/aaqilkhan/stepper-ai",
-    liveUrl: "https://stepperai.vercel.app/",
+    "Zayka is a Next.js application that showcases a production‑style architecture for a restaurant ordering experience. It includes public browsing, authenticated user flows, an admin back‑office, live order tracking, and a modular design system built on Radix UI primitives and Tailwind CSS.",
+    technologies: ["Next.js", "NestJS", "PostgreSQL", "Supabase", "Tailwind CSS"],
+    githubUrl: "https://github.com/ABDULAAQILKHAN/ZAYKA-DARBAR",
+    liveUrl: "https://zaykadarbar.vercel.app/",
     featured: true,
   },
   {
     id: "2",
     name: "MyCerts",
     description:
-      "Secure Digital Certificate & Credential Hub. Developed a full-stack certificate management portal enabling professionals to securely share and verify credentials with recruiters. Implemented a login-based system for uploading, managing, and generating unique shareable links for certifications. Built a responsive React frontend for seamless user experience and a robust backend API using Node.js and FastAPI to handle all CRUD operations and secure link generation. Planning migration to a Blockchain backend for enhanced verification.",
+    "Secure Digital Certificate & Credential Hub. Developed a full-stack certificate management portal enabling professionals to securely share and verify credentials with recruiters. Implemented a login-based system for uploading, managing, and generating unique shareable links for certifications. Built a responsive React frontend for seamless user experience and a robust backend API using Node.js and FastAPI to handle all CRUD operations and secure link generation. Planning migration to a Blockchain backend for enhanced verification.",
     technologies: ["Next.js", "FastAPI", "PostgreSQL", "Blockchain (planned)"],
-    //githubUrl: "https://github.com/aaqilkhan/mycerts",
+    githubUrl: "https://github.com/aaqilkhan/mycerts",
     liveUrl: "https://mycerts99.vercel.app/",
     featured: false,
   },
@@ -33,9 +33,19 @@ const projects: Project[] = [
     description:
       "Intelligent Resume Builder. Developed a client-side resume builder powered by Gemini AI, enabling automatic parsing of user data to auto-fill resume fields—reducing manual entry time by over 90%. Users can generate polished, downloadable PDF resumes directly in the browser without any backend dependency. Implemented a modern, responsive UI using React and Tailwind CSS.",
     technologies: ["React", "Gemini AI API", "Tailwind CSS", "PDF Generation Libraries"],
-    //githubUrl: "https://github.com/aaqilkhan/myresumeai",
+    githubUrl: "https://github.com/aaqilkhan/myresumeai",
     liveUrl: "https://myresumeai.vercel.app/",
     featured: false,
+  },
+  {
+    id: "4",
+    name: "Stepper.ai",
+    description:
+      "AI chatbot to debug code step by step, transforming single user prompts into interactive, step-by-step guides. Developed a responsive frontend with Next.js and Tailwind CSS, and a robust FastAPI backend to manage AI processing and data flow. Integrated Supabase for authentication and utilized Neon DB PostgreSQL for efficient storage and retrieval of content, ensuring seamless user experience and scalable data management.",
+    technologies: ["Next.js", "Tailwind CSS", "FastAPI", "Supabase", "Neon DB (PostgreSQL)"],
+    githubUrl: "https://github.com/aaqilkhan/stepper-ai",
+    liveUrl: "https://stepperai.vercel.app/",
+    featured: true,
   },
 ]
 
@@ -96,9 +106,24 @@ export default function Projects() {
                 </motion.div>
               )}
 
-              <div className="h-48 bg-gradient-to-br from-orange-500/20 to-purple-600/20 rounded-xl mb-6 flex items-center justify-center relative overflow-hidden group-hover:from-orange-500/30 group-hover:to-purple-600/30 transition-all duration-300">
-                <Code className="w-16 h-16 text-orange-400 opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-              </div>
+              {project.liveUrl ? (
+                <div className="rounded-xl mb-6 overflow-hidden border border-white/10">
+                  <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+                    <iframe
+                      src={project.liveUrl}
+                      title={`${project.name} live preview`}
+                      className="absolute top-0 left-0 w-full h-full bg-black/20"
+                      loading="lazy"
+                      sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-popups"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="h-48 bg-gradient-to-br from-orange-500/20 to-purple-600/20 rounded-xl mb-6 flex items-center justify-center relative overflow-hidden group-hover:from-orange-500/30 group-hover:to-purple-600/30 transition-all duration-300">
+                  <Code className="w-16 h-16 text-orange-400 opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                </div>
+              )}
 
               <h3
                 className="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300"
