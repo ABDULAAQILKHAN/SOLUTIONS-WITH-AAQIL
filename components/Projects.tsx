@@ -23,7 +23,7 @@ const projects: Project[] = [
     description:
     "Secure Digital Certificate & Credential Hub. Developed a full-stack certificate management portal enabling professionals to securely share and verify credentials with recruiters. Implemented a login-based system for uploading, managing, and generating unique shareable links for certifications. Built a responsive React frontend for seamless user experience and a robust backend API using Node.js and FastAPI to handle all CRUD operations and secure link generation. Planning migration to a Blockchain backend for enhanced verification.",
     technologies: ["Next.js", "FastAPI", "PostgreSQL", "Blockchain (planned)"],
-    githubUrl: "https://github.com/aaqilkhan/mycerts",
+    githubUrl: "https://github.com/ABDULAAQILKHAN/My-Certs",
     liveUrl: "https://mycerts99.vercel.app/",
     featured: false,
   },
@@ -33,7 +33,7 @@ const projects: Project[] = [
     description:
       "Intelligent Resume Builder. Developed a client-side resume builder powered by Gemini AI, enabling automatic parsing of user data to auto-fill resume fields—reducing manual entry time by over 90%. Users can generate polished, downloadable PDF resumes directly in the browser without any backend dependency. Implemented a modern, responsive UI using React and Tailwind CSS.",
     technologies: ["React", "Gemini AI API", "Tailwind CSS", "PDF Generation Libraries"],
-    githubUrl: "https://github.com/aaqilkhan/myresumeai",
+    githubUrl: "https://github.com/ABDULAAQILKHAN/cv.resume.ai",
     liveUrl: "https://myresumeai.vercel.app/",
     featured: false,
   },
@@ -43,7 +43,7 @@ const projects: Project[] = [
     description:
       "AI chatbot to debug code step by step, transforming single user prompts into interactive, step-by-step guides. Developed a responsive frontend with Next.js and Tailwind CSS, and a robust FastAPI backend to manage AI processing and data flow. Integrated Supabase for authentication and utilized Neon DB PostgreSQL for efficient storage and retrieval of content, ensuring seamless user experience and scalable data management.",
     technologies: ["Next.js", "Tailwind CSS", "FastAPI", "Supabase", "Neon DB (PostgreSQL)"],
-    githubUrl: "https://github.com/aaqilkhan/stepper-ai",
+    githubUrl: "https://github.com/ABDULAAQILKHAN/Stepper.ai",
     liveUrl: "https://stepperai.vercel.app/",
     featured: true,
   },
