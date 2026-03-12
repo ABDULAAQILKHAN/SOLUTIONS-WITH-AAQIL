@@ -4,12 +4,13 @@ import { ThemeProvider } from "./contexts/ThemeContext"
 import SpaceBackground from "./components/SpaceBackground"
 import ThemeToggle from "./components/ThemeToggle"
 import Hero from "./components/Hero"
-import About from "./components/About"
+// import About from "./components/About"
 import Skills from "./components/Skills"
 import Projects from "./components/Projects"
 import Experience from "./components/Experience"
 import Contact from "./components/Contact"
 import Footer from "./components/Footer"
+import Testimonials from "./components/Testimonials"
 
 export default function App() {
   return (
@@ -27,9 +28,10 @@ export default function App() {
         {/* Main Content with Glassmorphism */}
         <div className="relative z-10">
           <Hero />
-          <About />
+          {/* <About /> */}
           <Skills />
           <Projects />
+          <Testimonials />
           {/* <Experience /> */}
           <Contact />
           <Footer />

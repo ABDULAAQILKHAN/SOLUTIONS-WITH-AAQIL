@@ -2,101 +2,89 @@
 
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useInView } from "framer-motion"
-import { useRef } from "react"
-import { Code, Database, Smartphone, Settings, Brain, Blocks, Globe, Zap } from "lucide-react"
-import type { Skill } from "../types"
+import { useRef, useState } from "react"
+import { Code, Database, Smartphone, Settings, Brain, Blocks, Globe, Zap, Briefcase, ArrowRight, CheckCircle } from "lucide-react"
 
-const skills: Skill[] = [
-  // Frontend
-  { name: "React", category: "Frontend" },
-  { name: "Svelte", category: "Frontend" },
-  { name: "Next.js", category: "Frontend" },
-  { name: "TypeScript", category: "Frontend" },
-  { name: "Tailwind CSS", category: "Frontend" },
-  { name: "Redux Toolkit", category: "Frontend" },
+interface Service {
+  id: string
+  title: string
+  description: string
+  icon: typeof Code
+  color: string
+  skills: string[]
+  deliverables: string[]
+}
 
-  // Backend
-  { name: "FastAPI", category: "Backend" },
-  { name: "NestJS", category: "Backend" },
-  { name: "Express.js", category: "Backend" },
-  { name: "Python", category: "Backend" },
-  { name: "Node.js", category: "Backend" },
-  { name: "PostgreSQL", category: "Backend" },
-  { name: "MongoDB", category: "Backend" },
-  { name: "Springboot", category: "Backend" },
-
-  // Database
-  { name: "MongoDB", category: "Database" },
-  { name: "MySQL", category: "Database" },
-  { name: "Postgres", category: "Database" },
-  { name: "Firebase", category: "Database" },
-  { name: "Supabase", category: "Database" },
-
-  // Mobile
-  { name: "React Native", category: "Frontend" },
-  { name: "Flutter", category: "Frontend" },
-
-  // DevOps
-  { name: "Docker", category: "DevOps" },
-  { name: "Kubernetes", category: "DevOps" },
-  { name: "AWS", category: "DevOps" },
-  { name: "CI/CD", category: "DevOps" },
-  { name: "Git/GitHub", category: "DevOps" },
-
-  // AI & ML
-  { name: "TensorFlow", category: "AI & ML" },
-  { name: "OpenAI API", category: "AI & ML" },
-  { name: "LangChain", category: "AI & ML" },
-  { name: "Hugging Face", category: "AI & ML" },
-  { name: "Computer Vision", category: "AI & ML" },
-
-  // Web3 & Blockchain
-  { name: "Ethereum", category: "Web3" },
-  { name: "Solidity", category: "Web3" },
-  { name: "Web3.js", category: "Web3" },
-  { name: "MetaMask", category: "Web3" },
-  { name: "Smart Contracts", category: "Web3" },
-
-  // Automation
-  { name: "n8n", category: "Automation" },
-  { name: "Zapier", category: "Automation" },
-  { name: "Selenium", category: "Automation" },
-  { name: "Puppeteer", category: "Automation" },
-
-  // Cloud & Modern Tools
-  { name: "Vercel", category: "Cloud" },
-  { name: "Netlify", category: "Cloud" },
-  { name: "Firebase", category: "Cloud" },
-  { name: "Supabase", category: "Cloud" },
+const services: Service[] = [
+  {
+    id: "web-development",
+    title: "Web Development",
+    description: "Custom websites and web applications built with modern frameworks. From landing pages to complex enterprise solutions.",
+    icon: Code,
+    color: "from-blue-400 to-blue-600",
+    skills: ["React", "Next.js", "Svelte", "TypeScript", "Tailwind CSS", "Redux Toolkit"],
+    deliverables: ["Responsive Websites", "E-commerce Platforms", "Admin Dashboards", "Progressive Web Apps"]
+  },
+  {
+    id: "backend-api",
+    title: "Backend & API Development",
+    description: "Scalable server-side solutions and RESTful APIs. Secure, performant, and built for growth.",
+    icon: Database,
+    color: "from-green-400 to-green-600",
+    skills: ["FastAPI", "NestJS", "Express.js", "Python", "Node.js", "PostgreSQL", "MongoDB", "Springboot"],
+    deliverables: ["REST APIs", "GraphQL APIs", "Microservices", "Database Design"]
+  },
+  {
+    id: "mobile-apps",
+    title: "Mobile App Development",
+    description: "Cross-platform mobile applications that deliver native-like experiences on iOS and Android.",
+    icon: Smartphone,
+    color: "from-purple-400 to-purple-600",
+    skills: ["React Native", "Flutter", "Firebase", "Supabase"],
+    deliverables: ["iOS Apps", "Android Apps", "Cross-Platform Apps", "App Store Deployment"]
+  },
+  {
+    id: "ai-solutions",
+    title: "AI & Machine Learning",
+    description: "Intelligent solutions powered by cutting-edge AI. Chatbots, automation, and data-driven insights.",
+    icon: Brain,
+    color: "from-pink-400 to-pink-600",
+    skills: ["TensorFlow", "OpenAI API", "LangChain", "Hugging Face", "Computer Vision"],
+    deliverables: ["AI Chatbots", "Recommendation Systems", "Document Processing", "Custom AI Models"]
+  },
+  {
+    id: "devops-cloud",
+    title: "DevOps & Cloud Services",
+    description: "Infrastructure setup, deployment pipelines, and cloud architecture for seamless operations.",
+    icon: Settings,
+    color: "from-orange-400 to-orange-600",
+    skills: ["Docker", "Kubernetes", "AWS", "CI/CD", "Git/GitHub", "Vercel", "Netlify"],
+    deliverables: ["Cloud Migration", "CI/CD Pipelines", "Server Setup", "Performance Optimization"]
+  },
+  {
+    id: "blockchain",
+    title: "Web3 & Blockchain",
+    description: "Decentralized applications and smart contracts for the next generation of the internet.",
+    icon: Blocks,
+    color: "from-yellow-400 to-yellow-600",
+    skills: ["Ethereum", "Solidity", "Web3.js", "MetaMask", "Smart Contracts"],
+    deliverables: ["Smart Contracts", "DApps", "NFT Platforms", "Token Development"]
+  },
+  {
+    id: "automation",
+    title: "Business Automation",
+    description: "Streamline your workflows with custom automation solutions. Save time and reduce errors.",
+    icon: Zap,
+    color: "from-red-400 to-red-600",
+    skills: ["n8n", "Zapier", "Selenium", "Puppeteer"],
+    deliverables: ["Workflow Automation", "Data Scraping", "Report Generation", "Integration Services"]
+  },
 ]
-
-const categoryIcons = {
-  Frontend: Code,
-  Backend: Database,
-  Database: Database,
-  Mobile: Smartphone,
-  DevOps: Settings,
-  "AI & ML": Brain,
-  Web3: Blocks,
-  Automation: Zap,
-  Cloud: Globe,
-}
-
-const categoryColors = {
-  Frontend: "from-blue-400 to-blue-600",
-  Backend: "from-green-400 to-green-600",
-  Database: "from-teal-400 to-teal-600",
-  Mobile: "from-purple-400 to-purple-600",
-  DevOps: "from-orange-400 to-orange-600",
-  "AI & ML": "from-pink-400 to-pink-600",
-  Web3: "from-yellow-400 to-yellow-600",
-  Automation: "from-red-400 to-red-600",
-  Cloud: "from-cyan-400 to-cyan-600",
-}
 
 export default function Skills() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-50px" })
+  const [activeService, setActiveService] = useState<string | null>(null)
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -104,17 +92,6 @@ export default function Skills() {
   })
 
   const y = useTransform(scrollYProgress, [0, 1], [30, -30])
-
-  const groupedSkills = skills.reduce(
-    (acc, skill) => {
-      if (!acc[skill.category]) {
-        acc[skill.category] = []
-      }
-      acc[skill.category].push(skill)
-      return acc
-    },
-    {} as Record<string, Skill[]>,
-  )
 
   return (
     <section id="skills" className="py-20 relative">
@@ -126,54 +103,93 @@ export default function Skills() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl font-black text-white mb-4" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-            Skills & Technologies
-          </h2>
-          <p className="text-xl text-gray-300">Cutting-edge technologies I work with</p>
+          <div className="flex items-center justify-center mb-4">
+            <Briefcase className="w-8 h-8 text-orange-400 mr-3" />
+            <h2 className="text-5xl font-black text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              Services & Expertise
+            </h2>
+          </div>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Comprehensive digital solutions tailored to elevate your business. Each service backed by industry-leading technologies.
+          </p>
         </motion.div>
 
         <motion.div
           style={{ y, willChange: "transform" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {Object.entries(groupedSkills).map(([category, categorySkills], categoryIndex) => {
-            const IconComponent = categoryIcons[category as keyof typeof categoryIcons]
-            const colorClass = categoryColors[category as keyof typeof categoryColors]
+          {services.map((service, index) => {
+            const IconComponent = service.icon
+            const isActive = activeService === service.id
 
             return (
               <motion.div
-                key={category}
+                key={service.id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
-                className="bg-white/3 dark:bg-black/20 backdrop-blur-2xl border border-white/10 dark:border-white/5 rounded-2xl p-6 hover:bg-white/5 dark:hover:bg-black/30 transition-all duration-300 group"
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`bg-white/3 dark:bg-black/20 backdrop-blur-2xl border border-white/10 dark:border-white/5 rounded-2xl p-6 hover:bg-white/5 dark:hover:bg-black/30 transition-all duration-300 group cursor-pointer ${
+                  isActive ? "ring-2 ring-orange-400" : ""
+                }`}
+                onClick={() => setActiveService(isActive ? null : service.id)}
                 whileHover={{ scale: 1.02 }}
               >
                 <motion.div
-                  className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-r ${colorClass} mb-4 group-hover:scale-110 transition-transform duration-300`}
-                  whileHover={{ rotate: 180 }}
+                  className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-r ${service.color} mb-4 group-hover:scale-110 transition-transform duration-300`}
+                  whileHover={{ rotate: 10 }}
                   transition={{ duration: 0.3 }}
                 >
                   <IconComponent className="w-7 h-7 text-white" />
                 </motion.div>
 
-                <h3 className="text-xl font-bold text-white mb-4" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-                  {category}
+                <h3 className="text-xl font-bold text-white mb-3" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+                  {service.title}
                 </h3>
 
-                <div className="space-y-2">
-                  {categorySkills.map((skill, skillIndex) => (
-                    <motion.div
-                      key={skill.name}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                      transition={{ duration: 0.3, delay: categoryIndex * 0.1 + skillIndex * 0.03 }}
-                      className="px-3 py-2 bg-white/3 dark:bg-black/20 rounded-lg text-gray-300 font-medium cursor-pointer transition-all duration-200 hover:bg-white/5 dark:hover:bg-black/30 hover:text-white"
-                      whileHover={{ x: 3 }}
+                <p className="text-gray-400 mb-4 text-sm leading-relaxed">
+                  {service.description}
+                </p>
+
+                {/* Skills Tags */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {service.skills.slice(0, isActive ? undefined : 4).map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-2 py-1 bg-white/5 text-gray-300 rounded-md text-xs font-medium border border-white/10"
                     >
-                      {skill.name}
-                    </motion.div>
+                      {skill}
+                    </span>
                   ))}
+                  {!isActive && service.skills.length > 4 && (
+                    <span className="px-2 py-1 text-orange-400 text-xs font-medium">
+                      +{service.skills.length - 4} more
+                    </span>
+                  )}
+                </div>
+
+                {/* Expanded Content */}
+                <motion.div
+                  initial={false}
+                  animate={{ height: isActive ? "auto" : 0, opacity: isActive ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-4 border-t border-white/10">
+                    <h4 className="text-sm font-semibold text-orange-400 mb-3">What You Get:</h4>
+                    <ul className="space-y-2">
+                      {service.deliverables.map((item) => (
+                        <li key={item} className="flex items-center text-gray-300 text-sm">
+                          <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+
+                <div className="flex items-center text-orange-400 text-sm font-medium mt-4 group-hover:text-orange-300">
+                  {isActive ? "Click to collapse" : "Click to expand"}
+                  <ArrowRight className={`w-4 h-4 ml-1 transition-transform ${isActive ? "rotate-90" : ""}`} />
                 </div>
               </motion.div>
             )

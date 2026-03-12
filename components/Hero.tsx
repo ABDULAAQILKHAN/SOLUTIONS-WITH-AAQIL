@@ -76,11 +76,21 @@ export default function Hero() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              Explore My Work
+              Explore Business
             </motion.button>
+            <motion.a
+              href="https://aaqilcodes.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 bg-white/10 hover:bg-white/20 border-2 border-orange-400 text-orange-400 hover:text-white hover:border-orange-300 font-bold rounded-xl transition-all duration-300 backdrop-blur-sm text-center"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Know Me
+            </motion.a>
             <motion.button
               onClick={() => scrollToSection("contact")}
-              className="px-8 py-4 bg-white/10 hover:bg-white/20 border-2 border-orange-400 text-orange-400 hover:text-white hover:border-orange-300 font-bold rounded-xl transition-all duration-300 backdrop-blur-sm"
+              className="px-8 py-4 bg-white/10 hover:bg-white/20 border-2 border-cyan-400 text-cyan-400 hover:text-white hover:border-cyan-300 font-bold rounded-xl transition-all duration-300 backdrop-blur-sm"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
