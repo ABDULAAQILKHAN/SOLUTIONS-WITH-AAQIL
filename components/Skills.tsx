@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef, useState } from "react"
-import { Code, Database, Smartphone, Settings, Brain, Blocks, Globe, Zap, Briefcase, ArrowRight, CheckCircle } from "lucide-react"
+import { Code, Database, Smartphone, Settings, Brain, Blocks, Zap, Briefcase, ArrowRight, CheckCircle } from "lucide-react"
 
 interface Service {
   id: string
