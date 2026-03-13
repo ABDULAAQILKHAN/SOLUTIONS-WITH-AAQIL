@@ -48,55 +48,48 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.3 }}
             style={{ fontFamily: "'Orbitron', 'Inter', sans-serif" }}
           >
-            Solutions with{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-600">
+            SOLUTIONS WITH{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-600">
               AAQIL
             </span>
           </motion.h1>
 
           <motion.p
-            className="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}
+            className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto"
           >
-            Software Development Engineer | Scalable Architecture Specialist | AI & Web3 Innovator
+            Crafting enterprise-grade digital experiences with precision, security, and scalability.
           </motion.p>
-
+          
           <motion.div
-            className="flex flex-col sm:flex-row gap-6 justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <motion.button
-              onClick={() => scrollToSection("projects")}
-              className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl backdrop-blur-sm"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
+               onClick={() => scrollToSection('contact')}
+               className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold rounded-full text-lg shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transform hover:scale-105 transition-all duration-300"
             >
-              Explore Business
-            </motion.button>
-            <motion.a
-              href="https://aaqilcodes.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-4 bg-white/10 hover:bg-white/20 border-2 border-orange-400 text-orange-400 hover:text-white hover:border-orange-300 font-bold rounded-xl transition-all duration-300 backdrop-blur-sm text-center"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Know Me
-            </motion.a>
-            <motion.button
-              onClick={() => scrollToSection("contact")}
-              className="px-8 py-4 bg-white/10 hover:bg-white/20 border-2 border-cyan-400 text-cyan-400 hover:text-white hover:border-cyan-300 font-bold rounded-xl transition-all duration-300 backdrop-blur-sm"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Let's Connect
-            </motion.button>
+              Start specific Project
+            </button>
+            
+            <div className="relative group">
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-48 bg-white/10 backdrop-blur-md border border-orange-500/30 text-orange-300 text-xs px-3 py-1 rounded-full text-center">
+                 One Account. All Projects.
+                 <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-orange-500/30"></div>
+              </div>
+              <a
+                 href="/signup"
+                 className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold rounded-full text-lg hover:bg-white/20 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+              >
+                Explore Projects <Sparkles className="w-4 h-4" />
+              </a>
+            </div>
           </motion.div>
+        
         </motion.div>
       </motion.div>
 
