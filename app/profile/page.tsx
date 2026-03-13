@@ -12,6 +12,7 @@ import { PROJECTS } from '@/lib/constants'
 export default function ProfilePage() {
   const router = useRouter()
   const supabase = createClient()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   
@@ -93,8 +94,12 @@ export default function ProfilePage() {
          updated_at: new Date().toISOString()
       })
 
-    } catch (error: any) {
-      setMessage(`Error uploading image: ${error.message}`)
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(`Error uploading image: ${error.message || 'Unknown error'}`)
+      } else {
+        setMessage('Error uploading image: Unknown error')
+      }
     } finally {
       setUploadingImage(false)
     }
