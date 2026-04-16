@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import { motion } from 'framer-motion'
 import { PROJECT_ORIGINS } from '@/lib/constants'
 
-export default function ForgotPasswordPage() {
+function ForgotPasswordContent() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -201,5 +201,13 @@ export default function ForgotPasswordPage() {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+export default function ForgotPasswordPage() {
+  return (
+    <Suspense>
+      <ForgotPasswordContent />
+    </Suspense>
   )
 }
