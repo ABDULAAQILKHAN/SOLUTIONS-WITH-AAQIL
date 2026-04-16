@@ -37,3 +37,50 @@ export const PROJECTS = [
         link: "https://stepperai.vercel.app/"
     },
 ];
+
+/**
+ * Origin project config for auth pages.
+ * When a user arrives at /signup?from=<key> or /forgot-password?from=<key>,
+ * the page uses this data to show project-specific branding and a return link.
+ */
+export const PROJECT_ORIGINS: Record<string, {
+    name: string;
+    tagline: string;
+    description: string;
+    accentColor: string;      // Tailwind gradient `from-` color
+    accentColorTo: string;    // Tailwind gradient `to-` color
+    image: string;            // public/ image filename
+    tech: string[];
+    returnUrl: string;
+}> = {
+    mycerts: {
+        name: 'MyCerts',
+        tagline: 'Your Digital Credential Hub',
+        description: 'Upload, organize, and share your professional certificates with verified digital credentials.',
+        accentColor: 'from-emerald-500',
+        accentColorTo: 'to-teal-600',
+        image: 'certshare.png',
+        tech: ['Next.js', 'NestJS', 'PostgreSQL'],
+        returnUrl: 'https://mycerts99.vercel.app/',
+    },
+    stepperai: {
+        name: 'Stepper.ai',
+        tagline: 'AI-Powered Code Debugger',
+        description: 'Debug your code step by step with an intelligent AI assistant that walks you through every issue.',
+        accentColor: 'from-violet-500',
+        accentColorTo: 'to-purple-600',
+        image: 'stepperai.png',
+        tech: ['Next.js', 'FastAPI', 'Supabase'],
+        returnUrl: 'https://stepperai.vercel.app/',
+    },
+    resumeai: {
+        name: 'ResumeAI',
+        tagline: 'Smart Resume Builder',
+        description: 'Craft ATS-optimized resumes powered by AI that help you land your dream job faster.',
+        accentColor: 'from-sky-500',
+        accentColorTo: 'to-blue-600',
+        image: 'sol.png',
+        tech: ['Next.js', 'AI/ML', 'Supabase'],
+        returnUrl: 'https://resumeai.vercel.app/',
+    },
+};

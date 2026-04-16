@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Mail, Lock, ArrowRight, Loader2, Check, LayoutGrid, User, ShieldCheck } from 'lucide-react'
+import { Mail, Lock, ArrowRight, Loader2, Check, LayoutGrid, User, ShieldCheck, ExternalLink, ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { motion } from 'framer-motion'
-import { PROJECTS } from '@/lib/constants'
+import { PROJECTS, PROJECT_ORIGINS } from '@/lib/constants'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -17,7 +17,11 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
+
+  const fromKey = searchParams.get('from')?.toLowerCase() || null
+  const originProject = fromKey && PROJECT_ORIGINS[fromKey] ? PROJECT_ORIGINS[fromKey] : null
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -96,60 +100,126 @@ export default function SignupPage() {
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row relative">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black z-0 pointer-events-none" />
 
-      {/* Left Section - Projects Showcase */}
+      {/* Left Section - Contextual based on origin */}
       <div className="w-full md:w-1/2 p-6 md:p-12 relative z-10 flex flex-col justify-center bg-zinc-950 border-r border-white/5">
-        <div className="mb-10 text-center md:text-left">
-          <h1 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-600">
-            One Account. All Projects.
-          </h1>
-          <p className="text-gray-400 text-lg">
-            Create an account to access our complete ecosystem of applications and tools.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
-          {PROJECTS.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="bg-zinc-900/50 border border-white/5 rounded-xl overflow-hidden hover:border-blue-500/30 transition-all group hover:opacity-40"
+        {originProject ? (
+          /* ─── Origin-specific showcase ─── */
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center md:items-start"
+          >
+            {/* Return link */}
+            <a
+              href={originProject.returnUrl}
+              className="inline-flex items-center text-gray-400 hover:text-white mb-8 text-sm transition-colors group"
             >
-              <div className="h-32 bg-zinc-800 relative overflow-hidden">
-                {/* Fallback image placeholder if no image exists yet */}
-                <div className="absolute inset-0 flex items-center justify-center text-zinc-700">
-                  <LayoutGrid className="w-10 h-10" />
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+              Back to {originProject.name}
+            </a>
+
+            {/* Project hero image */}
+            <div className="w-full max-w-md rounded-2xl overflow-hidden border border-white/10 shadow-2xl mb-8 relative aspect-video">
+              <Image
+                src={`/${originProject.image}`}
+                alt={originProject.name}
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-5">
+                <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-2 bg-gradient-to-r ${originProject.accentColor} ${originProject.accentColorTo} text-white`}>
+                  {originProject.tagline}
                 </div>
-                <Image 
-                  src={`/${project.image}`} 
-                  alt={project.title} 
-                  fill 
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                /> 
-                
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-3">
-                   <h3 className="font-bold text-white text-sm">{project.title}</h3>
-                 </div>
+                <h2 className="text-2xl font-bold text-white">{originProject.name}</h2>
               </div>
-              <div className="p-3">
-                 <p className="text-xs text-gray-400 line-clamp-2 mb-2">{project.description}</p>
-                 <div className="flex flex-wrap gap-1">
-                   {project.category.split(',').slice(0, 2).map((tag, i) => (
-                     <span key={i} className="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-zinc-400">
-                       {tag.trim()}
-                     </span>
-                   ))}
-                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        
-        <div className="mt-8 flex items-center gap-4 text-sm text-gray-500 hidden md:flex">
-             <div className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-orange-500" /> Secure Access</div>
-             <div className="flex items-center gap-1"><User className="w-4 h-4 text-red-500" /> Single Identity</div>
-        </div>
+            </div>
+
+            {/* Project details */}
+            <p className="text-gray-400 text-base mb-6 max-w-md leading-relaxed">
+              {originProject.description}
+            </p>
+
+            {/* Tech stack badges */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {originProject.tech.map((t) => (
+                <span key={t} className="px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 border border-white/10 text-zinc-300">
+                  {t}
+                </span>
+              ))}
+            </div>
+
+            {/* CTA to return */}
+            <a
+              href={originProject.returnUrl}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm text-white bg-gradient-to-r ${originProject.accentColor} ${originProject.accentColorTo} hover:opacity-90 transition-opacity shadow-lg`}
+            >
+              Open {originProject.name} <ExternalLink className="w-4 h-4" />
+            </a>
+
+            <div className="mt-8 flex items-center gap-4 text-sm text-gray-500 hidden md:flex">
+              <div className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-orange-500" /> Secure Access</div>
+              <div className="flex items-center gap-1"><User className="w-4 h-4 text-red-500" /> Single Identity</div>
+            </div>
+          </motion.div>
+        ) : (
+          /* ─── Default: All-projects grid ─── */
+          <>
+            <div className="mb-10 text-center md:text-left">
+              <h1 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-600">
+                One Account. All Projects.
+              </h1>
+              <p className="text-gray-400 text-lg">
+                Create an account to access our complete ecosystem of applications and tools.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+              {PROJECTS.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  className="bg-zinc-900/50 border border-white/5 rounded-xl overflow-hidden hover:border-blue-500/30 transition-all group hover:opacity-40"
+                >
+                  <div className="h-32 bg-zinc-800 relative overflow-hidden">
+                    {/* Fallback image placeholder if no image exists yet */}
+                    <div className="absolute inset-0 flex items-center justify-center text-zinc-700">
+                      <LayoutGrid className="w-10 h-10" />
+                    </div>
+                    <Image 
+                      src={`/${project.image}`} 
+                      alt={project.title} 
+                      fill 
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    /> 
+                    
+                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-3">
+                       <h3 className="font-bold text-white text-sm">{project.title}</h3>
+                     </div>
+                  </div>
+                  <div className="p-3">
+                     <p className="text-xs text-gray-400 line-clamp-2 mb-2">{project.description}</p>
+                     <div className="flex flex-wrap gap-1">
+                       {project.category.split(',').slice(0, 2).map((tag, i) => (
+                         <span key={i} className="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-zinc-400">
+                           {tag.trim()}
+                         </span>
+                       ))}
+                     </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            
+            <div className="mt-8 flex items-center gap-4 text-sm text-gray-500 hidden md:flex">
+                 <div className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-orange-500" /> Secure Access</div>
+                 <div className="flex items-center gap-1"><User className="w-4 h-4 text-red-500" /> Single Identity</div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Right Section - Signup Form */}
@@ -162,7 +232,12 @@ export default function SignupPage() {
         >
           <div className="mb-8">
             <h2 className="text-3xl font-bold mb-2">Create Account</h2>
-            <p className="text-gray-400">Join the Solutions with Aaqil ecosystem today.</p>
+            <p className="text-gray-400">
+              {originProject
+                ? <>Sign up to continue to <span className="text-white font-medium">{originProject.name}</span></>
+                : 'Join the Solutions with Aaqil ecosystem today.'
+              }
+            </p>
           </div>
 
           {error && (
@@ -297,7 +372,7 @@ export default function SignupPage() {
 
           <div className="mt-8 text-center text-gray-400 text-sm">
             Already have an account?{' '}
-            <Link href="/login" className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
+            <Link href={`/login${fromKey ? `?from=${fromKey}` : ''}`} className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
               Sign in instead
             </Link>
           </div>

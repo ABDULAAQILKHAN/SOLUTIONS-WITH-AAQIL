@@ -116,7 +116,7 @@ export default function Testimonials() {
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center mb-4">
-            <MessageSquare className="w-8 h-8 text-orange-400 mr-3" />
+            <MessageSquare className="hidden sm:block w-8 h-8 text-orange-400 mr-3" />
             <h2 className="text-5xl font-black text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
               Client Stories
             </h2>

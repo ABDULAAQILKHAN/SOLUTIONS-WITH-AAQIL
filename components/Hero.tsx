@@ -29,7 +29,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="bg-white/3 dark:bg-black/20 backdrop-blur-2xl border border-white/10 dark:border-white/5 rounded-3xl p-12 shadow-2xl"
+          className="bg-white/3 dark:bg-black/20 backdrop-blur-2xl border border-white/10 dark:border-white/5 rounded-3xl p-6 sm:p-12 shadow-2xl"
         >
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -37,12 +37,12 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex items-center justify-center mb-6"
           >
-            <Sparkles className="w-8 h-8 text-orange-400 mr-3" />
-            <span className="text-orange-400 font-semibold text-lg tracking-wide">Building the Next Generation of Secure, Intelligent Apps</span>
+            <Sparkles className="hidden sm:block w-8 h-8 text-orange-400 mr-3 flex-shrink-0" />
+            <span className="text-orange-400 font-semibold text-sm sm:text-lg tracking-wide text-center">Building the Next Generation of Secure, Intelligent Apps</span>
           </motion.div>
 
           <motion.h1
-            className="text-6xl md:text-8xl font-black text-white mb-6 leading-tight"
+            className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-6 leading-tight"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
