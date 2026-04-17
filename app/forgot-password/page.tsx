@@ -26,8 +26,12 @@ function ForgotPasswordContent() {
     setError(null)
     setSuccess(false)
 
+    const resetUrl = fromKey
+      ? `${location.origin}/forgot-password/reset?from=${fromKey}`
+      : `${location.origin}/forgot-password/reset`
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${location.origin}/auth/callback?next=/profile/reset-password`,
+      redirectTo: resetUrl,
     })
 
     if (error) {

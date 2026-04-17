@@ -52,7 +52,7 @@ function SignupContent() {
       email,
       password,
       options: {
-        emailRedirectTo: `${location.origin}/login`,
+        emailRedirectTo: `${location.origin}/auth/callback?next=/login&from=${fromKey}`,
         data: {
           full_name: fullName,
         },
