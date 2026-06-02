@@ -1,7 +1,8 @@
 "use client"
 
+import Link from "next/link"
 import { motion } from "framer-motion"
-import { Github, Linkedin, Mail, Heart, ArrowUp } from "lucide-react"
+import { Github, Linkedin, Mail, Heart, ArrowUp, BookOpen } from "lucide-react"
 
 export default function Footer() {
   const socialLinks = [
@@ -63,11 +64,18 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-8 pt-8 text-center">
-          <p className="text-gray-400">
+        <div className="border-t border-white/10 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-gray-400 text-center sm:text-left">
             © {new Date().getFullYear()} Solutions with Aaqil. All rights reserved. |
             <span className="text-orange-400 ml-1">Crafting the future, one line of code at a time.</span>
           </p>
+          <Link
+            href="/articles"
+            className="flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors duration-200 flex-shrink-0"
+          >
+            <BookOpen className="w-4 h-4" />
+            Articles
+          </Link>
         </div>
       </div>
     </footer>

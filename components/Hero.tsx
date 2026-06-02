@@ -1,7 +1,8 @@
 "use client"
 
+import Link from "next/link"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { ChevronDown, Sparkles } from "lucide-react"
+import { ChevronDown, Sparkles, BookOpen } from "lucide-react"
 import { useRef } from "react"
 
 export default function Hero() {
@@ -88,6 +89,14 @@ export default function Hero() {
                 Explore Projects <Sparkles className="w-4 h-4" />
               </a>
             </div>
+
+            <Link
+              href="/articles"
+              className="px-8 py-4 bg-white/5 backdrop-blur-md border border-orange-500/30 text-orange-400 font-bold rounded-full text-lg hover:bg-orange-500/10 hover:border-orange-500/60 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+            >
+              <BookOpen className="w-4 h-4" />
+              Read Articles
+            </Link>
           </motion.div>
 
         </motion.div>
