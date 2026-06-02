@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { Mail, Lock, ArrowRight, Loader2, Check, LayoutGrid, User, ShieldCheck } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { PROJECTS } from '@/lib/constants'
-import { metadata } from '../layout'
 
 function SignupContent() {
   const [email, setEmail] = useState('')
@@ -43,10 +42,6 @@ function SignupContent() {
     }
 
     try {
-      const nameParts = fullName.trim().split(' ')
-      const firstName = nameParts[0] || ''
-      const lastName = nameParts.slice(1).join(' ') || ''
-
       const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_PRO_URL}/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -54,7 +49,7 @@ function SignupContent() {
           email,
           password,
           metadata: {
-            name: fullName,
+            name: fullName
           },
           redirectUrl: `${process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL}/login?message=${encodeURIComponent('Email verified successfully. You can now login.')}`
         })
