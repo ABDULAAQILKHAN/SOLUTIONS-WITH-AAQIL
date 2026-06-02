@@ -1,69 +1,73 @@
-'use client';
+'use client'
 
-import React, { useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
-import { motion } from 'framer-motion';
-import { KeyRound, Lock, Loader2, CheckCircle2, ShieldCheck, ExternalLink } from 'lucide-react';
-import { PROJECT_ORIGINS } from '@/lib/constants';
+import React, { useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { KeyRound, Lock, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 function ResetPasswordContent() {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const supabase = createClient();
-
-  const fromKey = searchParams.get('from')?.toLowerCase() || null;
-  const originProject = fromKey && PROJECT_ORIGINS[fromKey] ? PROJECT_ORIGINS[fromKey] : null;
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const handlePasswordReset = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccess(false);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    setSuccess(false)
 
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
+      setError('Passwords do not match')
+      setLoading(false)
+      return
     }
 
-    const hasUpperCase = /[A-Z]/.test(newPassword);
-    const hasLowerCase = /[a-z]/.test(newPassword);
-    const hasNumber = /\d/.test(newPassword);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
-    const isLengthValid = newPassword.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(newPassword)
+    const hasLowerCase = /[a-z]/.test(newPassword)
+    const hasNumber = /\d/.test(newPassword)
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword)
+    const isLengthValid = newPassword.length >= 8
 
     if (!(hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && isLengthValid)) {
-      setError('Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.');
-      setLoading(false);
-      return;
+      setError('Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.')
+      setLoading(false)
+      return
     }
 
-    const { error: updateError } = await supabase.auth.updateUser({
-      password: newPassword,
-    });
+    try {
+      const token = searchParams.get('token')
+      
+      if (!token) {
+        throw new Error('Invalid or missing reset token.')
+      }
 
-    if (updateError) {
-      setError(updateError.message);
-    } else {
-      setSuccess(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_PRO_URL}/auth/update-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, newPassword })
+      })
+
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to reset password.')
+      }
+
+      setSuccess(true)
       setTimeout(() => {
-        if (originProject) {
-          window.location.href = originProject.returnUrl;
-        } else {
-          router.push('/login');
-        }
-      }, 2000);
+        router.push('/login')
+      }, 2000)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.')
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false);
-  };
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden">
@@ -85,10 +89,7 @@ function ResetPasswordContent() {
           Secure Your Account
         </h2>
         <p className="text-gray-400 text-center mb-8">
-          {originProject
-            ? <>Set a new password to continue to <span className="text-white font-medium">{originProject.name}</span></>
-            : 'Enter your new password below'
-          }
+          Enter your new password below
         </p>
 
         {error && (
@@ -111,21 +112,9 @@ function ResetPasswordContent() {
             <div className="flex items-center mb-2">
               <CheckCircle2 className="w-5 h-5 mr-2 text-green-400 shrink-0" />
               <span>
-                Password reset successfully!{' '}
-                {originProject
-                  ? <>Redirecting you back to <span className="text-white font-medium">{originProject.name}</span>…</>
-                  : 'Redirecting to login…'
-                }
+                Password reset successfully! Redirecting to login…
               </span>
             </div>
-            {originProject && (
-              <a
-                href={originProject.returnUrl}
-                className={`inline-flex items-center gap-2 mt-1 px-4 py-2 rounded-lg font-semibold text-sm text-white bg-gradient-to-r ${originProject.accentColor} ${originProject.accentColorTo} hover:opacity-90 transition-opacity`}
-              >
-                Go to {originProject.name} now <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            )}
           </motion.div>
         )}
 
@@ -187,7 +176,7 @@ function ResetPasswordContent() {
         <div className="mt-8 text-center text-gray-400 text-sm">
           Remember your password?{' '}
           <Link
-            href={`/login${fromKey ? `?from=${fromKey}` : ''}`}
+            href="/login"
             className="text-orange-400 hover:text-orange-300 font-medium transition-colors"
           >
             Back to login
@@ -195,7 +184,7 @@ function ResetPasswordContent() {
         </div>
       </motion.div>
     </div>
-  );
+  )
 }
 
 export default function ResetPasswordPage() {
@@ -203,5 +192,5 @@ export default function ResetPasswordPage() {
     <Suspense>
       <ResetPasswordContent />
     </Suspense>
-  );
+  )
 }

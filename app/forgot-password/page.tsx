@@ -2,23 +2,14 @@
 
 import React, { useState, Suspense } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
-import { ArrowLeft, Mail, Loader2, CheckCircle, ExternalLink } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { ArrowLeft, Mail, Loader2, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { PROJECT_ORIGINS } from '@/lib/constants'
 
 function ForgotPasswordContent() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const supabase = createClient()
-  const searchParams = useSearchParams()
-
-  const fromKey = searchParams.get('from')?.toLowerCase() || null
-  const originProject = fromKey && PROJECT_ORIGINS[fromKey] ? PROJECT_ORIGINS[fromKey] : null
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,104 +17,49 @@ function ForgotPasswordContent() {
     setError(null)
     setSuccess(false)
 
-    const resetUrl = fromKey
-      ? `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/forgot-password/reset&from=${fromKey}`
-      : `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/forgot-password/reset`
+    try {
+      const redirectUrl = `${process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL}/forgot-password/reset`
+      
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_PRO_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, redirectUrl })
+      })
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: resetUrl,
-    })
+      const data = await response.json().catch(() => ({}))
 
-    if (error) {
-      setError(error.message)
-    } else {
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send reset email')
+      }
+
       setSuccess(true)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-black to-black z-0 pointer-events-none" />
 
-      <div className="w-full max-w-4xl flex flex-col md:flex-row gap-6 z-10">
-        {/* ─── Origin Project Card (shown when ?from= is present) ─── */}
-        {originProject && (
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
-            className="w-full md:w-1/2 flex flex-col justify-center"
-          >
-            <a
-              href={originProject.returnUrl}
-              className="inline-flex items-center text-gray-400 hover:text-white mb-6 text-sm transition-colors group w-fit"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to {originProject.name}
-            </a>
-
-            <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-xl">
-              {/* Project image */}
-              <div className="relative w-full aspect-video">
-                <Image
-                  src={`/${originProject.image}`}
-                  alt={originProject.name}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-2 bg-gradient-to-r ${originProject.accentColor} ${originProject.accentColorTo} text-white`}>
-                    {originProject.tagline}
-                  </div>
-                  <h2 className="text-xl font-bold text-white">{originProject.name}</h2>
-                </div>
-              </div>
-
-              <div className="p-5 space-y-4">
-                <p className="text-gray-400 text-sm leading-relaxed">{originProject.description}</p>
-
-                {/* Tech badges */}
-                <div className="flex flex-wrap gap-2">
-                  {originProject.tech.map((t) => (
-                    <span key={t} className="px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/5 border border-white/10 text-zinc-300">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                <a
-                  href={originProject.returnUrl}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm text-white bg-gradient-to-r ${originProject.accentColor} ${originProject.accentColorTo} hover:opacity-90 transition-opacity shadow-lg`}
-                >
-                  Open {originProject.name} <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
+      <div className="w-full max-w-md mx-auto z-10">
         {/* ─── Reset Password Form ─── */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className={`w-full ${originProject ? 'md:w-1/2' : 'max-w-md mx-auto'} bg-zinc-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-2xl shadow-xl flex flex-col justify-center`}
+          className="bg-zinc-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-2xl shadow-xl flex flex-col justify-center"
         >
-          {!originProject && (
-            <Link href="/login" className="inline-flex items-center text-gray-400 hover:text-white mb-6 text-sm transition-colors">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Login
-            </Link>
-          )}
+          <Link href="/login" className="inline-flex items-center text-gray-400 hover:text-white mb-6 text-sm transition-colors">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Login
+          </Link>
           
           <h2 className="text-2xl font-bold mb-2">Reset Password</h2>
           <p className="text-gray-400 mb-6 text-sm">
-            {originProject
-              ? <>Enter your email to reset your password for <span className="text-white font-medium">{originProject.name}</span>.</>
-              : "Enter your email address and we'll send you a link to reset your password."
-            }
+            Enter your email address and we'll send you a link to reset your password.
           </p>
 
           {success ? (
@@ -137,15 +73,6 @@ function ForgotPasswordContent() {
                </div>
                <h3 className="font-semibold text-green-400 mb-2">Check your email</h3>
                <p className="text-gray-300 text-sm">We've sent a password reset link to <span className="text-white font-medium">{email}</span></p>
-
-               {originProject && (
-                 <a
-                   href={originProject.returnUrl}
-                   className={`inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg font-semibold text-sm text-white bg-gradient-to-r ${originProject.accentColor} ${originProject.accentColorTo} hover:opacity-90 transition-opacity`}
-                 >
-                   Return to {originProject.name} <ExternalLink className="w-3.5 h-3.5" />
-                 </a>
-               )}
              </motion.div>
           ) : (
             <form onSubmit={handleResetPassword} className="space-y-4">
@@ -191,13 +118,13 @@ function ForgotPasswordContent() {
           <div className="mt-6 text-center text-gray-400 text-sm space-y-2">
             <div>
               Remember your password?{' '}
-              <Link href={`/login${fromKey ? `?from=${fromKey}` : ''}`} className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
+              <Link href="/login" className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
                 Sign in
               </Link>
             </div>
             <div>
               Don&apos;t have an account?{' '}
-              <Link href={`/signup${fromKey ? `?from=${fromKey}` : ''}`} className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
+              <Link href="/signup" className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
                 Sign up
               </Link>
             </div>

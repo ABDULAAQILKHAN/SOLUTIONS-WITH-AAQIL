@@ -62,7 +62,7 @@ export default function Hero() {
           >
             Crafting enterprise-grade digital experiences with precision, security, and scalability.
           </motion.p>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -70,26 +70,26 @@ export default function Hero() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <button
-               onClick={() => scrollToSection('contact')}
-               className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold rounded-full text-lg shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transform hover:scale-105 transition-all duration-300"
+              onClick={() => scrollToSection('contact')}
+              className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold rounded-full text-lg shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transform hover:scale-105 transition-all duration-300"
             >
-              Start specific Project
+              Start a Project
             </button>
-            
+
             <div className="relative group">
               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-48 bg-white/10 backdrop-blur-md border border-orange-500/30 text-orange-300 text-xs px-3 py-1 rounded-full text-center">
-                 One Account. All Projects.
-                 <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-orange-500/30"></div>
+                One Account. All Projects.
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-orange-500/30"></div>
               </div>
               <a
-                 href="/signup"
-                 className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold rounded-full text-lg hover:bg-white/20 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+                href="/signup"
+                className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold rounded-full text-lg hover:bg-white/20 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
               >
                 Explore Projects <Sparkles className="w-4 h-4" />
               </a>
             </div>
           </motion.div>
-        
+
         </motion.div>
       </motion.div>
 

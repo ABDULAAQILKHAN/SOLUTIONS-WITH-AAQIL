@@ -1,20 +1,19 @@
 'use client'
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Sparkles, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
 import { motion } from 'framer-motion'
+import { setAuthToken } from '@/app/actions/auth'
 
-export default function LoginPage() {
+function LoginContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  const supabase = createClient()
-  const searchParams = new URLSearchParams(window.location.search)
+  const searchParams = useSearchParams()
   const message = searchParams.get('message')
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -22,17 +21,30 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_PRO_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
 
-    if (error) {
-      setError(error.message)
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed')
+      }
+
+      // data should contain accessToken
+      if (data.accessToken) {
+        await setAuthToken(data.accessToken)
+        router.push('/profile')
+        router.refresh()
+      } else {
+        throw new Error('Invalid response from server')
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
       setLoading(false)
-    } else {
-      router.push('/profile')
-      router.refresh()
     }
   }
 
@@ -69,7 +81,9 @@ export default function LoginPage() {
         )}
 
         {message && (
-          <div className="alert alert-info">{message}</div>
+          <div className="bg-blue-500/10 border border-blue-500/50 text-blue-200 px-4 py-3 rounded-lg mb-6 text-sm flex items-center">
+            {message}
+          </div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-5">
@@ -135,5 +149,13 @@ export default function LoginPage() {
         </div>
       </motion.div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   )
 }
