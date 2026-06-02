@@ -14,6 +14,8 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createClient()
+  const searchParams = new URLSearchParams(window.location.search)
+  const message = searchParams.get('message')
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,6 +66,10 @@ export default function LoginPage() {
           >
             <span className="mr-2">⚠️</span> {error}
           </motion.div>
+        )}
+
+        {message && (
+          <div className="alert alert-info">{message}</div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-5">

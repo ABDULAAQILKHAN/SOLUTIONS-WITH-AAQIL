@@ -23,6 +23,10 @@ function SignupContent() {
   const fromKey = searchParams.get('from')?.toLowerCase() || null
   const originProject = fromKey && PROJECT_ORIGINS[fromKey] ? PROJECT_ORIGINS[fromKey] : null
 
+  const emailRedirectTo = fromKey === 'mycerts'
+    ? `${process.env.NEXT_PUBLIC_MY_CERTS_URL}/auth/callback?next=/login`
+    : `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/login&from=${fromKey}`;
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -52,7 +56,7 @@ function SignupContent() {
       email,
       password,
       options: {
-        emailRedirectTo: `${location.origin}/auth/callback?next=/login&from=${fromKey}`,
+        emailRedirectTo,
         data: {
           full_name: fullName,
         },
@@ -90,7 +94,7 @@ function SignupContent() {
       
       // Auto login or redirect to confirmation page
       // For email confirmation flow:
-      router.push('/login?message=Check your email to confirm your account')
+      router.push(`/login?message=${encodeURIComponent('Check your email to confirm your account')}`);
     } else {
         setLoading(false)
     }
