@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowLeft, BookOpen } from "lucide-react"
-import ThemeToggle from "./ThemeToggle"
 
 interface ArticleNavProps {
   showBack?: boolean
