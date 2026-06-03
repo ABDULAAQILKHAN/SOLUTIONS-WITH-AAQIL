@@ -12,7 +12,7 @@ interface ArticleLayoutProps {
 
 export default function ArticleLayout({ children, showBack = false }: ArticleLayoutProps) {
   return (
-    <ThemeProvider>
+    <ThemeProvider forceTheme="dark">
       <div
         className="min-h-screen relative overflow-x-hidden"
         style={{ fontFamily: "'Inter', 'Space Grotesk', sans-serif" }}

@@ -3,43 +3,86 @@
 import React, { useState, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
-import { Mail, Lock, ArrowRight, Loader2, Check, LayoutGrid, User, ShieldCheck } from 'lucide-react'
+import { Mail, Lock, ArrowRight, Loader2, Check, User, ShieldCheck } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { PROJECTS } from '@/lib/constants'
+import ProjectShowcase from '@/components/ProjectShowcase'
 
+// ── Validation helpers ────────────────────────────────────────────────────────
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+
+function validateSignup(fields: {
+  fullName: string
+  email: string
+  password: string
+  confirmPassword: string
+}) {
+  const e: Record<string, string> = {}
+  if (!fields.fullName.trim() || fields.fullName.trim().length < 2)
+    e.fullName = 'Full name must be at least 2 characters.'
+  if (!EMAIL_RE.test(fields.email))
+    e.email = 'Please enter a valid email address.'
+  if (fields.password.length < 8)
+    e.password = 'Password must be at least 8 characters.'
+  else if (!/[A-Z]/.test(fields.password) || !/[a-z]/.test(fields.password) || !/\d/.test(fields.password) || !/[!@#$%^&*(),.?":{}|<>]/.test(fields.password))
+    e.password = 'Password must include uppercase, lowercase, number, and special character.'
+  if (fields.confirmPassword !== fields.password)
+    e.confirmPassword = 'Passwords do not match.'
+  return e
+}
+
+// ── Field error component ─────────────────────────────────────────────────────
+function FieldError({ msg }: { msg?: string }) {
+  if (!msg) return null
+  return (
+    <motion.p
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="text-xs text-red-400 mt-1 ml-1"
+    >
+      {msg}
+    </motion.p>
+  )
+}
+
+function inputClass(error?: string) {
+  return `w-full bg-zinc-900/80 border ${error ? 'border-red-500/60' : 'border-zinc-800'} rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 ${error ? 'focus:ring-red-500/40 focus:border-red-500/60' : 'focus:ring-orange-500/50 focus:border-orange-500/50'} transition-all placeholder:text-gray-600`
+}
+
+// ── Password strength ─────────────────────────────────────────────────────────
+const PW_RULES = [
+  { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
+  { label: 'Uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
+  { label: 'Lowercase letter', test: (p: string) => /[a-z]/.test(p) },
+  { label: 'Number', test: (p: string) => /\d/.test(p) },
+  { label: 'Special character', test: (p: string) => /[!@#$%^&*(),.?":{}|<>]/.test(p) },
+]
+
+// ── Main form ─────────────────────────────────────────────────────────────────
 function SignupContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [fullName, setFullName] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [serverError, setServerError] = useState<string | null>(null)
+
+  // touched tracks which fields the user has left (blurred) at least once
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
+  const touch = (field: string) => setTouched((t) => ({ ...t, [field]: true }))
+
+  const errors = validateSignup({ fullName, email, password, confirmPassword })
+  const fieldError = (f: string) => touched[f] ? errors[f] : undefined
+
   const router = useRouter()
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
+    // Mark everything touched so all errors surface
+    setTouched({ fullName: true, email: true, password: true, confirmPassword: true })
+    if (Object.keys(errors).length > 0) return
+
     setLoading(true)
-    setError(null)
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match")
-      setLoading(false)
-      return
-    }
-
-    // Password complexity check
-    const hasUpperCase = /[A-Z]/.test(password)
-    const hasLowerCase = /[a-z]/.test(password)
-    const hasNumber = /\d/.test(password)
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
-    const isLengthValid = password.length >= 8
-
-    if (!(hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && isLengthValid)) {
-      setError("Password does not meet complexity requirements")
-      setLoading(false)
-      return
-    }
+    setServerError(null)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_PRO_URL}/auth/signup`, {
@@ -48,22 +91,15 @@ function SignupContent() {
         body: JSON.stringify({
           email,
           password,
-          metadata: {
-            name: fullName
-          },
+          metadata: { name: fullName },
           redirectUrl: `${process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL}/login?message=${encodeURIComponent('Email verified successfully. You can now login.')}`
         })
       })
-
       const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Signup failed')
-      }
-
+      if (!response.ok) throw new Error(data.message || 'Signup failed')
       router.push(`/login?message=${encodeURIComponent('Check your email to confirm your account')}`)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
+      setServerError(err instanceof Error ? err.message : 'An unexpected error occurred')
       setLoading(false)
     }
   }
@@ -72,63 +108,38 @@ function SignupContent() {
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row relative">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black z-0 pointer-events-none" />
 
-      {/* Left Section - All-projects grid */}
-      <div className="w-full md:w-1/2 p-6 md:p-12 relative z-10 flex flex-col justify-center bg-zinc-950 border-r border-white/5">
-        <div className="mb-10 text-center md:text-left">
-          <h1 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-600">
+      {/* ── Left: Project Showcase ─────────────────────────────────────────── */}
+      <div className="hidden md:flex w-full md:w-1/2 flex-col relative z-10">
+        {/* Header */}
+        <div className="absolute top-0 left-0 right-0 z-10 p-8 bg-gradient-to-b from-black/80 to-transparent">
+          <h1 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-600">
             One Account. All Projects.
           </h1>
-          <p className="text-gray-400 text-lg">
-            Create an account to access our complete ecosystem of applications and tools.
+          <p className="text-gray-400 text-sm mt-1">
+            Access our complete ecosystem of applications and tools.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
-          {PROJECTS.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="bg-zinc-900/50 border border-white/5 rounded-xl overflow-hidden hover:border-blue-500/30 transition-all group hover:opacity-40"
-            >
-              <div className="h-32 bg-zinc-800 relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center text-zinc-700">
-                  <LayoutGrid className="w-10 h-10" />
-                </div>
-                <Image
-                  src={`/${project.image}`}
-                  alt={project.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-3">
-                  <h3 className="font-bold text-white text-sm">{project.title}</h3>
-                </div>
-              </div>
-              <div className="p-3">
-                <p className="text-xs text-gray-400 line-clamp-2 mb-2">{project.description}</p>
-                <div className="flex flex-wrap gap-1">
-                  {project.category.split(',').slice(0, 2).map((tag, i) => (
-                    <span key={i} className="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-zinc-400">
-                      {tag.trim()}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        <div className="flex-1">
+          <ProjectShowcase />
         </div>
 
-        <div className="mt-8 flex items-center gap-4 text-sm text-gray-500 hidden md:flex">
-          <div className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-orange-500" /> Secure Access</div>
-          <div className="flex items-center gap-1"><User className="w-4 h-4 text-red-500" /> Single Identity</div>
+        <div className="absolute bottom-6 left-6 z-10 flex items-center gap-4 text-xs text-gray-500">
+          <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-orange-500" /> Secure Access</span>
+          <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5 text-red-500" /> Single Identity</span>
         </div>
       </div>
 
-      {/* Right Section - Signup Form */}
+      {/* ── Right: Signup Form ─────────────────────────────────────────────── */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-12 relative z-10">
+        {/* SOL Button */}
+        <Link
+          href="/"
+          className="absolute top-6 right-6 md:top-8 md:right-8 flex items-center justify-center w-fit h-fit px-6 py-2 rounded-full bg-orange/5  hover:bg-orange/10 transition-all border border-orange/10 text-orange font-bold text-sm tracking-widest backdrop-blur-sm hover:scale-105"
+        >
+          Solutions with Aaqil
+        </Link>
+
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -137,137 +148,132 @@ function SignupContent() {
         >
           <div className="mb-8">
             <h2 className="text-3xl font-bold mb-2">Create Account</h2>
-            <p className="text-gray-400">
-              Join the Solutions with Aaqil ecosystem today.
-            </p>
+            <p className="text-gray-400">Join the Solutions with Aaqil ecosystem today.</p>
           </div>
 
-          {error && (
+          {serverError && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              className="bg-red-500/10 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-6 text-sm flex items-center"
+              className="bg-red-500/10 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-6 text-sm"
             >
-              <span className="mr-2">⚠️</span> {error}
+              ⚠️ {serverError}
             </motion.div>
           )}
 
-          <form onSubmit={handleSignup} className="space-y-4">
-            <div className="space-y-2">
+          <form onSubmit={handleSignup} noValidate className="space-y-4">
+            {/* Full Name */}
+            <div className="space-y-1">
               <label className="text-sm font-medium text-gray-300 ml-1">Full Name</label>
               <div className="relative group">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 group-focus-within:text-orange-400 transition-colors w-5 h-5" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-orange-400 transition-colors w-5 h-5" />
                 <input
                   type="text"
                   placeholder="John Doe"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-zinc-900/80 border border-zinc-800 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all placeholder:text-gray-600"
+                  onBlur={() => touch('fullName')}
+                  className={inputClass(fieldError('fullName'))}
                   required
                 />
               </div>
+              <FieldError msg={fieldError('fullName')} />
             </div>
 
-            <div className="space-y-2">
+            {/* Email */}
+            <div className="space-y-1">
               <label className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
               <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 group-focus-within:text-orange-400 transition-colors w-5 h-5" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-orange-400 transition-colors w-5 h-5" />
                 <input
                   type="email"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-zinc-900/80 border border-zinc-800 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all placeholder:text-gray-600"
+                  onBlur={() => touch('email')}
+                  className={inputClass(fieldError('email'))}
                   required
                 />
               </div>
+              <FieldError msg={fieldError('email')} />
             </div>
 
-            <div className="space-y-2">
+            {/* Password */}
+            <div className="space-y-1">
               <label className="text-sm font-medium text-gray-300 ml-1">Password</label>
               <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 group-focus-within:text-orange-400 transition-colors w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-orange-400 transition-colors w-5 h-5" />
                 <input
                   type="password"
                   placeholder="Create a strong password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-zinc-900/80 border border-zinc-800 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all placeholder:text-gray-600"
+                  onBlur={() => touch('password')}
+                  className={inputClass(fieldError('password'))}
                   required
                 />
               </div>
+              <FieldError msg={fieldError('password')} />
 
-              {/* Password Complexity Checklist */}
+              {/* Inline strength checklist */}
               {password && (
                 <div className="space-y-1 mt-2 text-xs bg-zinc-900/50 p-3 rounded-lg border border-white/5">
-                  <p className="font-medium mb-1 text-gray-400">Password strength:</p>
-                  <div className={`flex items-center gap-2 ${password.length >= 8 ? 'text-green-500' : 'text-gray-500'}`}>
-                    <Check className="w-3 h-3" /> At least 8 characters
-                  </div>
-                  <div className={`flex items-center gap-2 ${/[A-Z]/.test(password) ? 'text-green-500' : 'text-gray-500'}`}>
-                    <Check className="w-3 h-3" /> Uppercase letter
-                  </div>
-                  <div className={`flex items-center gap-2 ${/[a-z]/.test(password) ? 'text-green-500' : 'text-gray-500'}`}>
-                    <Check className="w-3 h-3" /> Lowercase letter
-                  </div>
-                  <div className={`flex items-center gap-2 ${/\d/.test(password) ? 'text-green-500' : 'text-gray-500'}`}>
-                    <Check className="w-3 h-3" /> Number
-                  </div>
-                  <div className={`flex items-center gap-2 ${/[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'text-green-500' : 'text-gray-500'}`}>
-                    <Check className="w-3 h-3" /> Special character
-                  </div>
+                  {PW_RULES.map(({ label, test }) => {
+                    const ok = test(password)
+                    return (
+                      <div key={label} className={`flex items-center gap-2 ${ok ? 'text-green-400' : 'text-gray-500'}`}>
+                        <Check className={`w-3 h-3 ${ok ? 'opacity-100' : 'opacity-30'}`} />
+                        {label}
+                      </div>
+                    )
+                  })}
                 </div>
               )}
             </div>
 
-            <div className="space-y-2">
+            {/* Confirm Password */}
+            <div className="space-y-1">
               <label className="text-sm font-medium text-gray-300 ml-1">Confirm Password</label>
               <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 group-focus-within:text-orange-400 transition-colors w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-orange-400 transition-colors w-5 h-5" />
                 <input
                   type="password"
                   placeholder="Repeat your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`w-full bg-zinc-900/80 border ${confirmPassword && password !== confirmPassword ? 'border-red-500/50 focus:border-red-500' : 'border-zinc-800 focus:border-orange-500/50'} rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 ${confirmPassword && password !== confirmPassword ? 'focus:ring-red-500/50' : 'focus:ring-orange-500/50'} transition-all placeholder:text-gray-600`}
+                  onBlur={() => touch('confirmPassword')}
+                  className={inputClass(fieldError('confirmPassword'))}
                   required
                 />
               </div>
-              {confirmPassword && password !== confirmPassword && (
-                <p className="text-xs text-red-400 ml-1">Passwords do not match</p>
-              )}
+              <FieldError msg={fieldError('confirmPassword')} />
             </div>
 
-            {/* Terms Checkbox */}
+            {/* Terms */}
             <div className="flex items-start mt-2">
-              <div className="flex items-center h-5">
-                <input
-                  id="terms"
-                  type="checkbox"
-                  required
-                  className="w-4 h-4 border border-zinc-700 rounded bg-zinc-900 focus:ring-3 focus:ring-orange-500 focus:ring-opacity-50 checked:bg-orange-500"
-                />
-              </div>
+              <input
+                id="terms"
+                type="checkbox"
+                required
+                className="w-4 h-4 mt-0.5 border border-zinc-700 rounded bg-zinc-900 focus:ring-2 focus:ring-orange-500/50 checked:bg-orange-500"
+              />
               <label htmlFor="terms" className="ml-2 text-sm text-gray-400">
-                I agree to the <a href="#" className="text-orange-400 hover:underline">Terms of Service</a> and <a href="#" className="text-orange-400 hover:underline">Privacy Policy</a>.
+                I agree to the{' '}
+                <a href="#" className="text-orange-400 hover:underline">Terms of Service</a>
+                {' '}and{' '}
+                <a href="#" className="text-orange-400 hover:underline">Privacy Policy</a>.
               </label>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-6 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-orange-600/20 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full mt-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-orange-600/20 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <>
-                  <Loader2 className="animate-spin mr-2 h-5 w-5" />
-                  Creating Account...
-                </>
+                <><Loader2 className="animate-spin mr-2 h-5 w-5" />Creating Account...</>
               ) : (
-                <>
-                  Create Account
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </>
+                <>Create Account<ArrowRight className="ml-2 h-5 w-5" /></>
               )}
             </button>
           </form>

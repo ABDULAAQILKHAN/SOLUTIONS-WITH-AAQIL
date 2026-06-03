@@ -48,12 +48,9 @@ export default function ArticleNav({ showBack = false }: ArticleNavProps) {
           Articles
         </Link>
 
-        {/* Spacer to keep ThemeToggle from overlapping — the toggle is fixed positioned */}
+        {/* Spacer to keep navigation balanced */}
         <div className="w-20" />
       </div>
-
-      {/* ThemeToggle renders fixed top-right; we include it here so the ThemeProvider is in scope */}
-      <ThemeToggle />
     </motion.nav>
   )
 }

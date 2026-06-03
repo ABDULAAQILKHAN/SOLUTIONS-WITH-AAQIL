@@ -6,17 +6,8 @@ export const PROJECTS = [
         title: "Solutions with Aaqil",
         category: "Next.js, Tailwind, Framer motion, Email.js",
         description: "My personal B2B portfolio with Auth control of my own projects.",
-        image: "sol.png",
+        image: "image.png",
         link: "https://solutions-with-aaqil.vercel.app/"
-    },
-    {
-        id: 2,
-        slug: "zayka-darbar",
-        title: "Zayka-Darbar",
-        category: "Next.js, Supabase, NestJS",
-        description: "Multi-role food ordering platform with real-time tracking.",
-        image: "zayka.png",
-        link: "https://zaykadarbar.vercel.app/"
     },
     {
         id: 3,
@@ -33,7 +24,7 @@ export const PROJECTS = [
         title: "Stepper.ai",
         category: "Next.js, FastAPI, Supabase",
         description: "AI chatbot to debug code step by step.",
-        image: "stepperai.png",
+        image: "stepper_ai.png",
         link: "https://stepperai.vercel.app/"
     },
 ];
@@ -69,7 +60,7 @@ export const PROJECT_ORIGINS: Record<string, {
         description: 'Debug your code step by step with an intelligent AI assistant that walks you through every issue.',
         accentColor: 'from-violet-500',
         accentColorTo: 'to-purple-600',
-        image: 'stepperai.png',
+        image: 'stepper_ai.png',
         tech: ['Next.js', 'FastAPI', 'Supabase'],
         returnUrl: 'https://stepperai.vercel.app/',
     },
@@ -79,7 +70,7 @@ export const PROJECT_ORIGINS: Record<string, {
         description: 'Craft ATS-optimized resumes powered by AI that help you land your dream job faster.',
         accentColor: 'from-sky-500',
         accentColorTo: 'to-blue-600',
-        image: 'sol.png',
+        image: 'image.png',
         tech: ['Next.js', 'AI/ML', 'Supabase'],
         returnUrl: 'https://resumeai.vercel.app/',
     },

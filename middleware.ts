@@ -3,11 +3,12 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_pro_token')?.value
 
-  const isAuthRoute = 
+  const isAuthRoute =
     request.nextUrl.pathname.startsWith('/login') ||
     request.nextUrl.pathname.startsWith('/signup') ||
-    request.nextUrl.pathname.startsWith('/forgot-password')
-    
+    request.nextUrl.pathname.startsWith('/forgot-password') ||
+    request.nextUrl.pathname.startsWith('/article')
+
   const isPublicRoute = request.nextUrl.pathname === '/' || isAuthRoute
 
   if (!token && !isPublicRoute) {
